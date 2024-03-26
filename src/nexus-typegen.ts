@@ -63,7 +63,7 @@ export interface NexusGenFieldTypes {
     manga: NexusGenRootTypes['Manga']; // Manga!
   }
   Query: { // field return type
-    mangas: NexusGenRootTypes['Manga'][]; // [Manga!]!
+    mangaList: NexusGenRootTypes['Manga'][]; // [Manga!]!
     recommendedManga: NexusGenRootTypes['Manga'][]; // [Manga!]!
   }
 }
@@ -81,7 +81,7 @@ export interface NexusGenFieldTypeNames {
     manga: 'Manga'
   }
   Query: { // field return type name
-    mangas: 'Manga'
+    mangaList: 'Manga'
     recommendedManga: 'Manga'
   }
 }
@@ -96,8 +96,17 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    mangaList: { // args
+      direction?: string | null; // String
+      genres?: string | null; // String
+      limit?: number | null; // Int
+      page?: number | null; // Int
+      sorting?: string | null; // String
+    }
     recommendedManga: { // args
-      userId?: number | null; // Int
+      limit?: number | null; // Int
+      page?: number | null; // Int
+      userId: number; // Int!
     }
   }
 }

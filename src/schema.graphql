@@ -16,6 +16,6 @@ type Mutation {
 }
 
 type Query {
-  mangas: [Manga!]!
-  recommendedManga(userId: Int): [Manga!]!
+  mangaList(direction: String, genres: String, limit: Int, page: Int, sorting: String): [Manga!]!
+  recommendedManga(limit: Int, page: Int, userId: Int!): [Manga!]!
 }

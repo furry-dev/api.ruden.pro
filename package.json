@@ -10,11 +10,13 @@
   "author": "Furry Dev",
   "license": "MIT",
   "dependencies": {
+    "@prisma/client": "^5.11.0",
     "apollo-server": "^3.13.0",
     "graphql": "^16.8.1",
     "nexus": "^1.3.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.0"
+    "nodemon": "^3.1.0",
+    "prisma": "^5.11.0"
   }
 }
