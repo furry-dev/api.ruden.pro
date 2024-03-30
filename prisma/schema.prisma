@@ -8,58 +8,96 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator nexusPrisma {
+  provider = "nexus-prisma"
+}
+
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
+// Languages
+
+model LangCodes {
+  id                      Int                       @id @default(autoincrement())
+  covers                  MangaCovers[]
+  name                    String
+  mangaDescriptions       MangaDescriptions[]
+  mangaTitle              MangaTitle[]
+  MangaGenresTranslations MangaGenresTranslations[]
+}
+
+// Mangas
+
 model Manga {
   id          Int                 @id @default(autoincrement())
   year        Int
-  cover       Covers[]
+  cover       MangaCovers[]
+  title       MangaTitle[]
   description MangaDescriptions[]
   added       DateTime            @default(now())
   status      MangaStatus
-  genres      MangaGenres[]
+  genres      MangaToGenres[]
+  age_rating  AgeRatings
 }
 
-model Covers {
+model MangaCovers {
   id        Int       @id @default(autoincrement())
-  manga     Manga?    @relation(fields: [mangaId], references: [id])
+  manga     Manga?    @relation(fields: [mangaId], references: [id], onDelete: Cascade)
   mangaId   Int?
   file      String
   langCodes LangCodes @relation(fields: [lang], references: [id])
   lang      Int
 }
 
-model LangCodes {
-  id                Int                 @id @default(autoincrement())
-  covers            Covers[]
-  name              String
-  mangaDescriptions MangaDescriptions[]
-  mangaGenres       MangaGenres[]
+model MangaTitle {
+  id          Int       @id @default(autoincrement())
+  manga       Manga?    @relation(fields: [mangaId], references: [id], onDelete: Cascade)
+  mangaId     Int?
+  text        String
+  langCodes   LangCodes @relation(fields: [lang], references: [id])
+  lang Int
 }
 
 model MangaDescriptions {
   id          Int       @id @default(autoincrement())
-  manga       Manga?    @relation(fields: [mangaId], references: [id])
+  manga       Manga?    @relation(fields: [mangaId], references: [id], onDelete: Cascade)
   mangaId     Int?
   text        String
-  langCodes   LangCodes @relation(fields: [langCodesId], references: [id])
-  langCodesId Int
+  langCodes   LangCodes @relation(fields: [lang], references: [id])
+  lang Int
+}
+
+model MangaToGenres {
+  id      Int    @id @default(autoincrement())
+  manga   Manga? @relation(fields: [mangaId], references: [id], onDelete: Cascade)
+  mangaId Int?
 }
 
 model MangaGenres {
-  id          Int       @id @default(autoincrement())
-  name        String
-  langCodes   LangCodes @relation(fields: [langCodesId], references: [id])
-  manga       Manga?    @relation(fields: [mangaId], references: [id])
-  mangaId     Int?
-  langCodesId Int
+  id           Int                       @id @default(autoincrement())
+  name         String
+  transtalions MangaGenresTranslations[]
+}
+
+model MangaGenresTranslations {
+  id            Int          @id @default(autoincrement())
+  name          String
+  langCodes     LangCodes    @relation(fields: [lang], references: [id])
+  lang   Int
+  MangaGenres   MangaGenres? @relation(fields: [mangaGenres], references: [id])
+  mangaGenres Int?
 }
 
 enum MangaStatus {
   release
   ongoing
   finish
+}
+
+enum AgeRatings {
+  R_18
+  R_16
+  R_12
 }

@@ -4,7 +4,7 @@
  */
 
 
-
+import type { Context } from "./context"
 
 
 
@@ -14,9 +14,25 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  CoverInput: { // input type
+    file: string; // String!
+    lang: number; // Int!
+  }
+  DescriptionInput: { // input type
+    lang: number; // Int!
+    text: string; // String!
+  }
+  TitleInput: { // input type
+    lang: number; // Int!
+    text: string; // String!
+  }
 }
 
 export interface NexusGenEnums {
+  AgeRating: "R_12" | "R_16" | "R_18"
+  MangaSorting: "LATEST_UPDATES" | "NEW" | "POPULARITY"
+  MangaStatus: "finish" | "ongoing" | "release"
+  SortingDirection: "DESC"
 }
 
 export interface NexusGenScalars {
@@ -28,13 +44,36 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  Language: { // root type
+    id: number; // Int!
+    name: string; // String!
+  }
   Manga: { // root type
     added: string; // String!
-    cover: string; // String!
-    description?: string | null; // String
+    age_rating: string; // String!
+    cover: Array<NexusGenRootTypes['MangaCover'] | null>; // [MangaCover]!
+    description: Array<NexusGenRootTypes['MangaDescription'] | null>; // [MangaDescription]!
     id: number; // Int!
-    title: string; // String!
+    title: Array<NexusGenRootTypes['MangaTitle'] | null>; // [MangaTitle]!
     year?: number | null; // Int
+  }
+  MangaCover: { // root type
+    file: string; // String!
+    id: number; // Int!
+    lang: number; // Int!
+    mangaId: number; // Int!
+  }
+  MangaDescription: { // root type
+    id: number; // Int!
+    lang: number; // Int!
+    mangaId: number; // Int!
+    text: string; // String!
+  }
+  MangaTitle: { // root type
+    id: number; // Int!
+    lang: number; // Int!
+    mangaId: number; // Int!
+    text: string; // String!
   }
   Mutation: {};
   Query: {};
@@ -48,65 +87,113 @@ export interface NexusGenUnions {
 
 export type NexusGenRootTypes = NexusGenObjects
 
-export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
+export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
+  Language: { // field return type
+    id: number; // Int!
+    name: string; // String!
+  }
   Manga: { // field return type
     added: string; // String!
-    cover: string; // String!
-    description: string | null; // String
+    age_rating: string; // String!
+    cover: Array<NexusGenRootTypes['MangaCover'] | null>; // [MangaCover]!
+    description: Array<NexusGenRootTypes['MangaDescription'] | null>; // [MangaDescription]!
     id: number; // Int!
-    title: string; // String!
+    title: Array<NexusGenRootTypes['MangaTitle'] | null>; // [MangaTitle]!
     year: number | null; // Int
   }
+  MangaCover: { // field return type
+    file: string; // String!
+    id: number; // Int!
+    lang: number; // Int!
+    langCodes: NexusGenRootTypes['Language'] | null; // Language
+    mangaId: number; // Int!
+  }
+  MangaDescription: { // field return type
+    id: number; // Int!
+    lang: number; // Int!
+    langCodes: NexusGenRootTypes['Language'] | null; // Language
+    mangaId: number; // Int!
+    text: string; // String!
+  }
+  MangaTitle: { // field return type
+    id: number; // Int!
+    lang: number; // Int!
+    langCodes: NexusGenRootTypes['Language'] | null; // Language
+    mangaId: number; // Int!
+    text: string; // String!
+  }
   Mutation: { // field return type
-    manga: NexusGenRootTypes['Manga']; // Manga!
+    createManga: NexusGenRootTypes['Manga']; // Manga!
   }
   Query: { // field return type
     mangaList: NexusGenRootTypes['Manga'][]; // [Manga!]!
-    recommendedManga: NexusGenRootTypes['Manga'][]; // [Manga!]!
   }
 }
 
 export interface NexusGenFieldTypeNames {
+  Language: { // field return type name
+    id: 'Int'
+    name: 'String'
+  }
   Manga: { // field return type name
     added: 'String'
-    cover: 'String'
-    description: 'String'
+    age_rating: 'String'
+    cover: 'MangaCover'
+    description: 'MangaDescription'
     id: 'Int'
-    title: 'String'
+    title: 'MangaTitle'
     year: 'Int'
   }
+  MangaCover: { // field return type name
+    file: 'String'
+    id: 'Int'
+    lang: 'Int'
+    langCodes: 'Language'
+    mangaId: 'Int'
+  }
+  MangaDescription: { // field return type name
+    id: 'Int'
+    lang: 'Int'
+    langCodes: 'Language'
+    mangaId: 'Int'
+    text: 'String'
+  }
+  MangaTitle: { // field return type name
+    id: 'Int'
+    lang: 'Int'
+    langCodes: 'Language'
+    mangaId: 'Int'
+    text: 'String'
+  }
   Mutation: { // field return type name
-    manga: 'Manga'
+    createManga: 'Manga'
   }
   Query: { // field return type name
     mangaList: 'Manga'
-    recommendedManga: 'Manga'
   }
 }
 
 export interface NexusGenArgTypes {
   Mutation: {
-    manga: { // args
-      cover: string; // String!
-      description?: string | null; // String
-      title: string; // String!
-      year?: number | null; // Int
+    createManga: { // args
+      age_rating: NexusGenEnums['AgeRating']; // AgeRating!
+      cover: NexusGenInputs['CoverInput'][]; // [CoverInput!]!
+      description: NexusGenInputs['DescriptionInput'][]; // [DescriptionInput!]!
+      status: NexusGenEnums['MangaStatus']; // MangaStatus!
+      title: NexusGenInputs['TitleInput'][]; // [TitleInput!]!
+      year: number; // Int!
     }
   }
   Query: {
     mangaList: { // args
-      direction?: string | null; // String
+      direction?: NexusGenEnums['SortingDirection'] | null; // SortingDirection
       genres?: string | null; // String
+      langId?: Array<number | null> | null; // [Int]
       limit?: number | null; // Int
       page?: number | null; // Int
-      sorting?: string | null; // String
-    }
-    recommendedManga: { // args
-      limit?: number | null; // Int
-      page?: number | null; // Int
-      userId: number; // Int!
+      sorting?: NexusGenEnums['MangaSorting'] | null; // MangaSorting
     }
   }
 }
@@ -119,9 +206,9 @@ export interface NexusGenTypeInterfaces {
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
 
-export type NexusGenInputNames = never;
+export type NexusGenInputNames = keyof NexusGenInputs;
 
-export type NexusGenEnumNames = never;
+export type NexusGenEnumNames = keyof NexusGenEnums;
 
 export type NexusGenInterfaceNames = never;
 
@@ -142,7 +229,7 @@ export type NexusGenFeaturesConfig = {
 }
 
 export interface NexusGenTypes {
-  context: any;
+  context: Context;
   inputTypes: NexusGenInputs;
   rootTypes: NexusGenRootTypes;
   inputTypeShapes: NexusGenInputs & NexusGenEnums & NexusGenScalars;
