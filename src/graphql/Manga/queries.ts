@@ -1,7 +1,7 @@
 import {enumType, extendType, intArg, list, stringArg, nonNull} from "nexus"
 import {Context} from "../../context"
-import { Prisma } from "@prisma/client"
-import {DefaultArgs, GetFindResult, GetResult } from "@prisma/client/runtime/library"
+import {Prisma} from "@prisma/client"
+import {DefaultArgs, GetFindResult, GetResult} from "@prisma/client/runtime/library"
 
 type Manga = {
     title: { lang: number, text: string }[];
@@ -11,9 +11,9 @@ type Manga = {
 }
 
 type MangaQueriesAdditionalFields = {
-    author?: {name: string}[]
-    artist?: {name: string}[]
-    publisher?: {name: string}[]
+    author?: { name: string }[]
+    artist?: { name: string }[]
+    publisher?: { name: string }[]
 }
 
 function sortByLangId(langId: (number | null)[], manga: Manga) {
@@ -54,7 +54,7 @@ export const MangasQuery = extendType({
             type: "Manga",
             args: {
                 sorting: enumType({
-                    name: 'MangaSorting',
+                    name: "MangaSorting",
                     members: [
                         "POPULARITY",
                         "NEW",
@@ -62,7 +62,7 @@ export const MangasQuery = extendType({
                     ]
                 }),
                 direction: enumType({
-                    name: 'SortingDirection',
+                    name: "SortingDirection",
                     members: [
                         "DESC"
                     ]
@@ -84,7 +84,7 @@ export const MangasQuery = extendType({
                 limit = limit || 10
                 page = page || 1
 
-                let result = await context.prisma.manga.findMany({
+                const result = await context.prisma.manga.findMany({
                     skip: (page - 1) * limit,
                     take: limit,
                     include: {
@@ -146,7 +146,7 @@ export const MangaQuery = extendType({
                 id,
                 langId
             }, context: Context, info) {
-                let result = await context.prisma.manga.findUnique({
+                const result = await context.prisma.manga.findUnique({
                     include: {
                         cover: {include: {langCodes: true}},
                         title: {include: {langCodes: true}},

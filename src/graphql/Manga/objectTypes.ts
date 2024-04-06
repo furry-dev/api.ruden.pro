@@ -2,14 +2,14 @@ import {inputObjectType, objectType} from "nexus"
 import {Context} from "../../context"
 
 export const TitleInput = inputObjectType({
-    name: 'TitleInput',
+    name: "TitleInput",
     definition(t) {
         t.nonNull.string("text")
         t.nonNull.int("lang")
     }
 })
 export const CoverInput = inputObjectType({
-    name: 'CoverInput',
+    name: "CoverInput",
     definition(t) {
         t.nonNull.string("file")
         t.nonNull.int("lang")
@@ -17,7 +17,7 @@ export const CoverInput = inputObjectType({
 })
 
 export const DescriptionInput = inputObjectType({
-    name: 'DescriptionInput',
+    name: "DescriptionInput",
     definition(t) {
         t.nonNull.string("text")
         t.nonNull.int("lang")
@@ -25,14 +25,14 @@ export const DescriptionInput = inputObjectType({
 })
 
 export const PublisherInput = inputObjectType({
-    name: 'PublisherInput',
+    name: "PublisherInput",
     definition(t) {
         t.nonNull.int("id")
     }
 })
 
 export const PeopleInput = inputObjectType({
-    name: 'PeopleInput',
+    name: "PeopleInput",
     definition(t) {
         t.nonNull.int("id")
     }

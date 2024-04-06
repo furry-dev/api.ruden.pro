@@ -1,5 +1,5 @@
-import {extendType, nonNull, stringArg} from "nexus";
-import {Context} from "../../context";
+import {extendType, nonNull, stringArg} from "nexus"
+import {Context} from "../../context"
 
 export const PeopleMutation = extendType({
     type: "Mutation",
@@ -11,7 +11,7 @@ export const PeopleMutation = extendType({
             },
             async resolve(parent, {
                 name
-            }, context: Context, info) {
+            }, context: Context) {
                 return context.prisma.people.create({
                     data: {
                         name: name,

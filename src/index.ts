@@ -1,6 +1,6 @@
 import {ApolloServer} from "apollo-server"
 import {schema} from "./schema"
-import {context} from "./context";
+import {context} from "./context"
 
 const port = process.env.PORT || 3005
 
