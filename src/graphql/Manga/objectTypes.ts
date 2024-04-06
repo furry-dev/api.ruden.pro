@@ -24,6 +24,20 @@ export const DescriptionInput = inputObjectType({
     }
 })
 
+export const PublisherInput = inputObjectType({
+    name: 'PublisherInput',
+    definition(t) {
+        t.nonNull.int("id")
+    }
+})
+
+export const PeopleInput = inputObjectType({
+    name: 'PeopleInput',
+    definition(t) {
+        t.nonNull.int("id")
+    }
+})
+
 export const MangaDescription = objectType({
     name: "MangaDescription",
     definition(t) {
@@ -85,8 +99,11 @@ export const Manga = objectType({
         t.nonNull.list.field("title", {type: "MangaTitle"})
         t.nonNull.list.field("cover", {type: "MangaCover",})
         t.nonNull.list.field("description", {type: "MangaDescription"})
+        t.nonNull.list.field("artist", {type: "People"})
+        t.nonNull.list.field("author", {type: "People"})
+        t.nonNull.list.field("publisher", {type: "Publisher"})
         t.nonNull.string("added")
-        t.nonNull.string("age_rating")
+        t.nonNull.string("ageRating")
         t.int("year")
     },
 })

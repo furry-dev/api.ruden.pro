@@ -3,7 +3,7 @@ import {AgeRatings, MangaStatus} from "nexus-prisma"
 import {Context} from "../../context"
 
 
-export const Mutation = extendType({
+export const MangaMutation = extendType({
     type: "Mutation",
     definition(t) {
         t.nonNull.field("createManga", {
@@ -12,6 +12,9 @@ export const Mutation = extendType({
                 title: nonNull(list(nonNull('TitleInput'))),
                 cover: nonNull(list(nonNull('CoverInput'))),
                 description: nonNull(list(nonNull('DescriptionInput'))),
+                author: list(nonNull('PeopleInput')),
+                artist: list(nonNull('PeopleInput')),
+                publisher: list(nonNull('PublisherInput')),
                 year: nonNull(intArg()),
                 age_rating: nonNull(enumType({
                     name: 'AgeRating',
@@ -22,10 +25,14 @@ export const Mutation = extendType({
                     members: MangaStatus.members
                 }))
             },
+            // @ts-ignore
             async resolve(parent, {
                 title,
                 cover,
                 description,
+                author,
+                artist,
+                publisher,
                 year,
                 age_rating,
                 status
@@ -51,7 +58,22 @@ export const Mutation = extendType({
                                 langCodes: {connect: {id: lang}}
                             }))
                         },
-                        age_rating: age_rating,
+                        ageRating: age_rating,
+                        artist2manga: {
+                            create: artist?.map(({id}) => ({
+                                peopleId: id
+                            }))
+                        },
+                        author2manga: {
+                            create: author?.map(({id}) => ({
+                                peopleId: id
+                            }))
+                        },
+                        publishers2manga: {
+                            create: publisher?.map(({id}) => ({
+                                publisherId: id
+                            }))
+                        },
                         status: status,
                         genres: {
                             create: []
@@ -76,7 +98,10 @@ export const Mutation = extendType({
                                 langCodes: true
                             }
                         },
-                        age_rating: true,
+                        author2manga: true,
+                        artist2manga: true,
+                        publishers2manga: true,
+                        ageRating: true,
                         status: true
                     }
                 })

@@ -22,6 +22,12 @@ export interface NexusGenInputs {
     lang: number; // Int!
     text: string; // String!
   }
+  PeopleInput: { // input type
+    id: number; // Int!
+  }
+  PublisherInput: { // input type
+    id: number; // Int!
+  }
   TitleInput: { // input type
     lang: number; // Int!
     text: string; // String!
@@ -50,10 +56,13 @@ export interface NexusGenObjects {
   }
   Manga: { // root type
     added: string; // String!
-    age_rating: string; // String!
+    ageRating: string; // String!
+    artist: Array<NexusGenRootTypes['People'] | null>; // [People]!
+    author: Array<NexusGenRootTypes['People'] | null>; // [People]!
     cover: Array<NexusGenRootTypes['MangaCover'] | null>; // [MangaCover]!
     description: Array<NexusGenRootTypes['MangaDescription'] | null>; // [MangaDescription]!
     id: number; // Int!
+    publisher: Array<NexusGenRootTypes['Publisher'] | null>; // [Publisher]!
     title: Array<NexusGenRootTypes['MangaTitle'] | null>; // [MangaTitle]!
     year?: number | null; // Int
   }
@@ -76,6 +85,14 @@ export interface NexusGenObjects {
     text: string; // String!
   }
   Mutation: {};
+  People: { // root type
+    id: number; // Int!
+    name: string; // String!
+  }
+  Publisher: { // root type
+    id: number; // Int!
+    name: string; // String!
+  }
   Query: {};
 }
 
@@ -96,10 +113,13 @@ export interface NexusGenFieldTypes {
   }
   Manga: { // field return type
     added: string; // String!
-    age_rating: string; // String!
+    ageRating: string; // String!
+    artist: Array<NexusGenRootTypes['People'] | null>; // [People]!
+    author: Array<NexusGenRootTypes['People'] | null>; // [People]!
     cover: Array<NexusGenRootTypes['MangaCover'] | null>; // [MangaCover]!
     description: Array<NexusGenRootTypes['MangaDescription'] | null>; // [MangaDescription]!
     id: number; // Int!
+    publisher: Array<NexusGenRootTypes['Publisher'] | null>; // [Publisher]!
     title: Array<NexusGenRootTypes['MangaTitle'] | null>; // [MangaTitle]!
     year: number | null; // Int
   }
@@ -125,9 +145,21 @@ export interface NexusGenFieldTypes {
     text: string; // String!
   }
   Mutation: { // field return type
+    createLanguage: NexusGenRootTypes['Language']; // Language!
     createManga: NexusGenRootTypes['Manga']; // Manga!
+    createPeople: NexusGenRootTypes['People']; // People!
+    createPublisher: NexusGenRootTypes['Publisher']; // Publisher!
+  }
+  People: { // field return type
+    id: number; // Int!
+    name: string; // String!
+  }
+  Publisher: { // field return type
+    id: number; // Int!
+    name: string; // String!
   }
   Query: { // field return type
+    manga: NexusGenRootTypes['Manga']; // Manga!
     mangaList: NexusGenRootTypes['Manga'][]; // [Manga!]!
   }
 }
@@ -139,10 +171,13 @@ export interface NexusGenFieldTypeNames {
   }
   Manga: { // field return type name
     added: 'String'
-    age_rating: 'String'
+    ageRating: 'String'
+    artist: 'People'
+    author: 'People'
     cover: 'MangaCover'
     description: 'MangaDescription'
     id: 'Int'
+    publisher: 'Publisher'
     title: 'MangaTitle'
     year: 'Int'
   }
@@ -168,25 +203,53 @@ export interface NexusGenFieldTypeNames {
     text: 'String'
   }
   Mutation: { // field return type name
+    createLanguage: 'Language'
     createManga: 'Manga'
+    createPeople: 'People'
+    createPublisher: 'Publisher'
+  }
+  People: { // field return type name
+    id: 'Int'
+    name: 'String'
+  }
+  Publisher: { // field return type name
+    id: 'Int'
+    name: 'String'
   }
   Query: { // field return type name
+    manga: 'Manga'
     mangaList: 'Manga'
   }
 }
 
 export interface NexusGenArgTypes {
   Mutation: {
+    createLanguage: { // args
+      name: string; // String!
+    }
     createManga: { // args
       age_rating: NexusGenEnums['AgeRating']; // AgeRating!
+      artist?: NexusGenInputs['PeopleInput'][] | null; // [PeopleInput!]
+      author?: NexusGenInputs['PeopleInput'][] | null; // [PeopleInput!]
       cover: NexusGenInputs['CoverInput'][]; // [CoverInput!]!
       description: NexusGenInputs['DescriptionInput'][]; // [DescriptionInput!]!
+      publisher?: NexusGenInputs['PublisherInput'][] | null; // [PublisherInput!]
       status: NexusGenEnums['MangaStatus']; // MangaStatus!
       title: NexusGenInputs['TitleInput'][]; // [TitleInput!]!
       year: number; // Int!
     }
+    createPeople: { // args
+      name: string; // String!
+    }
+    createPublisher: { // args
+      name: string; // String!
+    }
   }
   Query: {
+    manga: { // args
+      id: number; // Int!
+      langId?: Array<number | null> | null; // [Int]
+    }
     mangaList: { // args
       direction?: NexusGenEnums['SortingDirection'] | null; // SortingDirection
       genres?: string | null; // String

@@ -8,7 +8,7 @@ export const server = new ApolloServer({
     schema,
     context,
     cors: {
-        origin: ["http://localhost:3000", "https://studio.apollographql.com"]
+        origin: ["http://localhost:3000", "https://studio.apollographql.com", "http://192.168.31.3:3000"]
     }
 })
 

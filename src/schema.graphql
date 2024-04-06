@@ -25,10 +25,13 @@ type Language {
 
 type Manga {
   added: String!
-  age_rating: String!
+  ageRating: String!
+  artist: [People]!
+  author: [People]!
   cover: [MangaCover]!
   description: [MangaDescription]!
   id: Int!
+  publisher: [Publisher]!
   title: [MangaTitle]!
   year: Int
 }
@@ -70,10 +73,32 @@ type MangaTitle {
 }
 
 type Mutation {
-  createManga(age_rating: AgeRating!, cover: [CoverInput!]!, description: [DescriptionInput!]!, status: MangaStatus!, title: [TitleInput!]!, year: Int!): Manga!
+  createLanguage(name: String!): Language!
+  createManga(age_rating: AgeRating!, artist: [PeopleInput!], author: [PeopleInput!], cover: [CoverInput!]!, description: [DescriptionInput!]!, publisher: [PublisherInput!], status: MangaStatus!, title: [TitleInput!]!, year: Int!): Manga!
+  createPeople(name: String!): People!
+  createPublisher(name: String!): Publisher!
+}
+
+type People {
+  id: Int!
+  name: String!
+}
+
+input PeopleInput {
+  id: Int!
+}
+
+type Publisher {
+  id: Int!
+  name: String!
+}
+
+input PublisherInput {
+  id: Int!
 }
 
 type Query {
+  manga(id: Int!, langId: [Int]): Manga!
   mangaList(direction: SortingDirection, genres: String, langId: [Int], limit: Int, page: Int, sorting: MangaSorting): [Manga!]!
 }
 
