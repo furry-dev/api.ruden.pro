@@ -1,22 +1,10 @@
 import {enumType, extendType, intArg, list, stringArg, nonNull} from "nexus"
 import {Context} from "../../context"
-import {Prisma} from "@prisma/client"
-import {DefaultArgs, GetFindResult, GetResult} from "@prisma/client/runtime/library"
+import MangaGraphQLEntityFromPrisma, {MangaEntity} from "./entity/MangaEntity"
 
-type Manga = {
-    title: { lang: number, text: string }[];
-    description: { lang: number, text: string }[];
-    cover: { lang: number, url: string }[];
-    [key: string]: any; // Позволяет другим полям в объекте
-}
 
-type MangaQueriesAdditionalFields = {
-    author?: { name: string }[]
-    artist?: { name: string }[]
-    publisher?: { name: string }[]
-}
 
-function sortByLangId(langId: (number | null)[], manga: Manga) {
+function sortByLangId(langId: (number | null)[], manga: MangaEntity) {
     manga.title = manga.title.filter(title =>
         langId.some(langId => title.lang === langId)
     )
@@ -28,24 +16,9 @@ function sortByLangId(langId: (number | null)[], manga: Manga) {
     )
 }
 
-function sortListByLangId(langId: (number | null)[], mangaList: Manga[]) {
+function sortListByLangId(langId: (number | null)[], mangaList: MangaEntity[]) {
     mangaList.forEach(manga => sortByLangId(langId, manga))
 }
-
-type MangasQueryPrismaResult = GetFindResult<Prisma.$MangaPayload<DefaultArgs>, {
-    take: any;
-    include: {
-        cover: { include: { langCodes: boolean } };
-        publishers2manga: { include: { publisher: boolean } };
-        artist2manga: { include: { people: boolean } };
-        description: { include: { langCodes: boolean } };
-        title: { include: { langCodes: boolean } };
-        author2manga: { include: { people: boolean } }
-    };
-    skip: number
-}>
-
-type MangasQueryResult = MangaQueriesAdditionalFields & MangaQueryPrismaResult
 
 export const MangasQuery = extendType({
     type: "Query",
@@ -72,15 +45,11 @@ export const MangasQuery = extendType({
                 page: intArg(),
                 langId: list(intArg()),
             },
-            // @ts-ignore
             async resolve(parent, {
-                sorting,
-                direction,
-                genres,
                 limit,
                 page,
                 langId
-            }, context: Context, info) {
+            }, context: Context) {
                 limit = limit || 10
                 page = page || 1
 
@@ -97,40 +66,16 @@ export const MangasQuery = extendType({
                     }
                 })
 
-                // @ts-ignore
-                const mangas: MangasQueryResult[] = [...result] as unknown as MangasQueryPrismaResult[]
+                const mangas = result.map(manga => new MangaGraphQLEntityFromPrisma(manga))
 
-                mangas.forEach((manga, index) => {
-                    manga.author = []
-                    manga.artist = []
-                    manga.publisher = []
+                if (langId) sortListByLangId(langId, mangas)
 
-                    result[index].author2manga.map(obj => manga.author?.push(obj.people))
-                    result[index].artist2manga.map(obj => manga.artist?.push(obj.people))
-                    result[index].publishers2manga.map(obj => manga.publisher?.push(obj.publisher))
-                })
-
-                if (langId) sortListByLangId(langId, mangas as unknown as Manga[])
-
-                return result
+                return mangas
             },
         })
     },
 })
 
-type MangaQueryPrismaResult = Prisma.Prisma__MangaClient<GetResult<Prisma.$MangaPayload<DefaultArgs>, {
-    include: {
-        cover: { include: { langCodes: boolean } };
-        publishers2manga: { include: { publisher: boolean } };
-        artist2manga: { include: { people: boolean } };
-        description: { include: { langCodes: boolean } };
-        title: { include: { langCodes: boolean } };
-        author2manga: { include: { people: boolean } }
-    };
-    where: { id: any }
-}, "findUnique"> | null, null, DefaultArgs>
-
-type MangaQueryResult = MangaQueriesAdditionalFields & MangaQueryPrismaResult
 
 export const MangaQuery = extendType({
     type: "Query",
@@ -141,11 +86,10 @@ export const MangaQuery = extendType({
                 id: nonNull(intArg()),
                 langId: list(intArg())
             },
-            // @ts-ignore
             async resolve(parent, {
                 id,
                 langId
-            }, context: Context, info) {
+            }, context: Context) {
                 const result = await context.prisma.manga.findUnique({
                     include: {
                         cover: {include: {langCodes: true}},
@@ -160,17 +104,11 @@ export const MangaQuery = extendType({
                     }
                 })
 
-                const manga: MangaQueryResult = {...result} as unknown as MangaQueryPrismaResult
+                if (!result) throw Error("Manga result is null")
 
-                manga.author = []
-                manga.artist = []
-                manga.publisher = []
+                const manga = new MangaGraphQLEntityFromPrisma(result)
 
-                result?.author2manga.map(obj => manga.author?.push(obj.people))
-                result?.artist2manga.map(obj => manga.artist?.push(obj.people))
-                result?.publishers2manga.map(obj => manga.publisher?.push(obj.publisher))
-
-                if (langId) sortByLangId(langId, manga as unknown as Manga)
+                if (langId) sortByLangId(langId, manga)
 
                 return manga
             },

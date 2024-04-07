@@ -51,8 +51,8 @@ model Manga {
 
 model MangaCovers {
   id        Int       @id @default(autoincrement())
-  manga     Manga?    @relation(fields: [mangaId], references: [id], onDelete: Cascade)
-  mangaId   Int?      @map("manga_id")
+  manga     Manga     @relation(fields: [mangaId], references: [id], onDelete: Cascade)
+  mangaId   Int       @map("manga_id")
   file      String
   langCodes LangCodes @relation(fields: [lang], references: [id])
   lang      Int
@@ -62,8 +62,8 @@ model MangaCovers {
 
 model MangaTitle {
   id        Int       @id @default(autoincrement())
-  manga     Manga?    @relation(fields: [mangaId], references: [id], onDelete: Cascade)
-  mangaId   Int?      @map("manga_id")
+  manga     Manga     @relation(fields: [mangaId], references: [id], onDelete: Cascade)
+  mangaId   Int       @map("manga_id")
   text      String
   langCodes LangCodes @relation(fields: [lang], references: [id])
   lang      Int
@@ -73,8 +73,8 @@ model MangaTitle {
 
 model MangaDescriptions {
   id        Int       @id @default(autoincrement())
-  manga     Manga?    @relation(fields: [mangaId], references: [id], onDelete: Cascade)
-  mangaId   Int?      @map("manga_id")
+  manga     Manga     @relation(fields: [mangaId], references: [id], onDelete: Cascade)
+  mangaId   Int       @map("manga_id")
   text      String
   langCodes LangCodes @relation(fields: [lang], references: [id])
   lang      Int
@@ -83,9 +83,9 @@ model MangaDescriptions {
 }
 
 model Manga2Genres {
-  id      Int    @id @default(autoincrement())
-  manga   Manga? @relation(fields: [mangaId], references: [id], onDelete: Cascade)
-  mangaId Int?   @map("manga_id")
+  id      Int   @id @default(autoincrement())
+  manga   Manga @relation(fields: [mangaId], references: [id], onDelete: Cascade)
+  mangaId Int   @map("manga_id")
 
   @@map("manga2genres")
 }
@@ -99,12 +99,12 @@ model MangaGenres {
 }
 
 model MangaGenresTranslations {
-  id          Int          @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   name        String
-  langCodes   LangCodes    @relation(fields: [lang], references: [id])
+  langCodes   LangCodes   @relation(fields: [lang], references: [id])
   lang        Int
-  MangaGenres MangaGenres? @relation(fields: [mangaGenres], references: [id])
-  mangaGenres Int?
+  MangaGenres MangaGenres @relation(fields: [mangaGenres], references: [id])
+  mangaGenres Int
 
   @@map("manga_genres_translations")
 }
@@ -144,11 +144,10 @@ model Artist2Manga {
 }
 
 model People {
-  id              Int                @id @default(autoincrement())
-  name            String
-  Artist2Manga    Artist2Manga[]
-  Author2Manga    Author2Manga[]
-  Publisers2Manga Publishers2Manga[]
+  id           Int            @id @default(autoincrement())
+  name         String
+  Artist2Manga Artist2Manga[]
+  Author2Manga Author2Manga[]
 
   @@map("people")
 }
@@ -161,8 +160,6 @@ model Publishers2Manga {
   manga       Manga      @relation(fields: [mangaId], references: [id])
   publisherId Int        @map("publisher_id")
   mangaId     Int        @map("manga_id")
-  People      People?    @relation(fields: [peopleId], references: [id])
-  peopleId    Int?
 
   @@map("publishers2manga")
 }
