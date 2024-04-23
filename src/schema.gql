@@ -1,0 +1,80 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type TranslationStrEntity {
+  lang: String!
+  text: String!
+}
+
+type GenreEntity {
+  _id: String!
+  names: [TranslationStrEntity!]!
+}
+
+type MangaEntity {
+  _id: String!
+  year: Int!
+  titles: [TranslationStrEntity!]!
+  descriptions: [TranslationStrEntity!]!
+  genres: [GenreEntity!]!
+  ageRating: MangaAgeRatingEnum!
+  status: MangaStatusEnum!
+}
+
+enum MangaAgeRatingEnum {
+  R_H
+  R_18
+  R_16
+  R_12
+}
+
+enum MangaStatusEnum {
+  released
+  ongoing
+  finished
+}
+
+type Query {
+  getHello: String!
+  getAllManga: [MangaEntity!]!
+  genres: [GenreEntity!]!
+}
+
+type Mutation {
+  createManga(createMangaInput: CreateMangaInput!): MangaEntity!
+  createGenre(createGenreInput: CreateGenreInput!): GenreEntity!
+}
+
+input CreateMangaInput {
+  """Manga year"""
+  year: Int!
+
+  """Manga titles"""
+  titles: [TranslationStrDto!]!
+
+  """Manga descriptions"""
+  descriptions: [TranslationStrDto!]!
+
+  """Manga genres _id list"""
+  genres: [String!]!
+
+  """Manga age rating"""
+  ageRating: MangaAgeRatingEnum!
+
+  """Manga status"""
+  status: MangaStatusEnum!
+}
+
+input TranslationStrDto {
+  """Manga year"""
+  lang: String!
+
+  """Manga year"""
+  text: String!
+}
+
+input CreateGenreInput {
+  """Manga titles"""
+  names: [TranslationStrDto!]!
+}

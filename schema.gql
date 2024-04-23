@@ -1,0 +1,29 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Manga {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Query {
+  manga(id: Int!): Manga!
+}
+
+type Mutation {
+  createManga(createMangaInput: CreateMangaInput!): Manga!
+  updateManga(updateMangaInput: UpdateMangaInput!): Manga!
+  removeManga(id: Int!): Manga!
+}
+
+input CreateMangaInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateMangaInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
