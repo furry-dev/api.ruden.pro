@@ -1,8 +1,10 @@
-import { Injectable } from "@nestjs/common"
-import { CreateMangaInput } from "./dto/create-manga.input"
-import { InjectModel } from "@nestjs/mongoose"
-import { Model, Types } from "mongoose"
-import { MangaEntity } from "./entities/manga.entity"
+import {Injectable} from "@nestjs/common"
+import {CreateMangaInput} from "./dto/create-manga.input"
+import {InjectModel} from "@nestjs/mongoose"
+import {Model, Types} from "mongoose"
+import {MangaEntity} from "./entities/manga.entity"
+import {UpdateMangaInput} from "./dto/update-manga.input"
+import {sortByLangCodes} from "../localized-entities/utils"
 
 @Injectable()
 export class MangaService {
@@ -21,20 +23,54 @@ export class MangaService {
         return createdManga.save()
     }
 
-    findAll() {
-        return this.mangaModel.find().populate("genres").exec()
+    async findAll(
+        fieldsFilterLangCodes?: (string | null)[],
+        genreIds?: string[],
+        page?: number,
+        limit?: number
+    ) {
+        let query = this.mangaModel.find()
+
+        if (genreIds && genreIds.length > 0) {
+            query = query.find({genres: {$in: genreIds.map(id => new Types.ObjectId(id))}})
+        }
+
+        if (page && limit) {
+            query = query.skip((page - 1) * limit).limit(limit)
+        }
+
+        const mangas = await query.populate("genres").exec()
+
+        if (fieldsFilterLangCodes) {
+            mangas.forEach(manga => {
+                manga.titles = sortByLangCodes(fieldsFilterLangCodes, manga.titles)
+                manga.descriptions = sortByLangCodes(fieldsFilterLangCodes, manga.descriptions)
+                manga.covers = sortByLangCodes(fieldsFilterLangCodes, manga.covers)
+            })
+        }
+
+        return mangas
     }
 
-    //
-    // findOne(id: number) {
-    //     return `This action returns a #${id} manga`
-    // }
-    //
-    // update(id: number, updateMangaInput: UpdateMangaInput) {
-    //     return `This action updates a #${id} manga`
-    // }
-    //
-    // remove(id: number) {
-    //     return `This action removes a #${id} manga`
-    // }
+
+    async findOne(_id: string, fieldsFilterLangCodes?: (string | null)[]) {
+        const manga = await this.mangaModel.findById(_id).populate("genres").exec()
+
+        if (fieldsFilterLangCodes) {
+            manga.titles = sortByLangCodes(fieldsFilterLangCodes, manga.titles)
+            manga.descriptions = sortByLangCodes(fieldsFilterLangCodes, manga.descriptions)
+            manga.covers = sortByLangCodes(fieldsFilterLangCodes, manga.covers)
+        }
+
+        return manga
+    }
+
+    async update(updateMangaInput: UpdateMangaInput) {
+        const updatedManga = await this.mangaModel.findByIdAndUpdate(updateMangaInput._id, updateMangaInput).exec()
+        return this.findOne(updatedManga.id)
+    }
+
+    remove(_id: string) {
+        return this.mangaModel.findByIdAndDelete(_id)
+    }
 }

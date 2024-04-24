@@ -1,7 +1,8 @@
-import { Args, Mutation, Query, Resolver } from "@nestjs/graphql"
-import { MangaService } from "./manga.service"
-import { MangaEntity } from "./entities/manga.entity"
-import { CreateMangaInput } from "./dto/create-manga.input"
+import {Args, Mutation, Query, Resolver} from "@nestjs/graphql"
+import {MangaService} from "./manga.service"
+import {MangaEntity} from "./entities/manga.entity"
+import {CreateMangaInput} from "./dto/create-manga.input"
+import {UpdateMangaInput} from "./dto/update-manga.input"
 
 @Resolver(() => MangaEntity)
 export class MangaResolver {
@@ -15,28 +16,36 @@ export class MangaResolver {
         return this.mangaService.create(createMangaInput)
     }
 
-    @Query(() => [MangaEntity])
-    async getAllManga() {
-        return this.mangaService.findAll()
+    @Query(() => [MangaEntity], {name: "mangas"})
+    findAll(
+        @Args("fieldsFilterLangCodes", {type: () => [String], nullable: true})
+            fieldsFilterLangCodes?: string[],
+        @Args("genreIds", {type: () => [String], nullable: true})
+            genreIds?: string[],
+        @Args("page", {type: () => Number, nullable: true})
+            page?: number,
+        @Args("limit", {type: () => Number, nullable: true})
+            limit?: number
+    ) {
+        return this.mangaService.findAll(fieldsFilterLangCodes, genreIds, page, limit)
     }
 
-    // @Query(() => [Manga], { name: 'manga' })
-    // findAll() {
-    //   return this.mangaService.findAll();
-    // }
-    //
-    // @Query(() => Manga, { name: 'manga' })
-    // findOne(@Args('id', { type: () => Int }) id: number) {
-    //   return this.mangaService.findOne(id);
-    // }
-    //
-    // @Mutation(() => Manga)
-    // updateManga(@Args('updateMangaInput') updateMangaInput: UpdateMangaInput) {
-    //   return this.mangaService.update(updateMangaInput.id, updateMangaInput);
-    // }
-    //
-    // @Mutation(() => Manga)
-    // removeManga(@Args('id', { type: () => Int }) id: number) {
-    //   return this.mangaService.remove(id);
-    // }
+    @Query(() => MangaEntity, {name: "manga"})
+    findOne(
+        @Args("id", {type: () => String}) _id: string,
+        @Args("fieldsFilterLangCodes", {type: () => [String], nullable: true})
+            fieldsFilterLangCodes?: string[]
+    ) {
+        return this.mangaService.findOne(_id, fieldsFilterLangCodes)
+    }
+
+    @Mutation(() => MangaEntity)
+    updateManga(@Args("updateMangaInput") updateMangaInput: UpdateMangaInput) {
+        return this.mangaService.update(updateMangaInput)
+    }
+
+    @Mutation(() => MangaEntity)
+    removeManga(@Args("id", {type: () => String}) _id: string) {
+        return this.mangaService.remove(_id)
+    }
 }

@@ -1,8 +1,9 @@
-import { Injectable } from "@nestjs/common"
-import { CreateGenreInput } from "./dto/create-genre.input"
-import { InjectModel } from "@nestjs/mongoose"
-import { Model } from "mongoose"
-import { GenreEntity } from "./entities/genre.entity"
+import {Injectable} from "@nestjs/common"
+import {CreateGenreInput} from "./dto/create-genre.input"
+import {InjectModel} from "@nestjs/mongoose"
+import {Model} from "mongoose"
+import {GenreEntity} from "./entities/genre.entity"
+import {UpdateGenreInput} from "./dto/update-genre.input"
 
 @Injectable()
 export class GenresService {
@@ -20,16 +21,15 @@ export class GenresService {
         return this.genreModel.find().exec()
     }
 
-    //
-    // findOne(id: number) {
-    //     return `This action returns a #${id} genre`
-    // }
-    //
-    // update(id: number, updateGenreInput: UpdateGenreInput) {
-    //     return `This action updates a #${id} genre`
-    // }
-    //
-    // remove(id: number) {
-    //     return `This action removes a #${id} genre`
-    // }
+    findOne(_id: string) {
+        return this.genreModel.findById(_id).exec()
+    }
+
+    update(updateGenreInput: UpdateGenreInput) {
+        return this.genreModel.findByIdAndUpdate(updateGenreInput._id, updateGenreInput).exec()
+    }
+
+    remove(_id: string) {
+        return this.genreModel.findByIdAndDelete(_id)
+    }
 }

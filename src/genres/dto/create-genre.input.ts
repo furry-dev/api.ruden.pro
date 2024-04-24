@@ -1,8 +1,8 @@
-import { Field, InputType } from "@nestjs/graphql"
-import { TranslationStrDto } from "../../translation-str/dto/translations-str.dto"
+import {Field, InputType} from "@nestjs/graphql"
+import {LocalizedStrDto} from "../../localized-entities/dto/localized-str.dto"
 
 @InputType()
 export class CreateGenreInput {
-    @Field(() => [TranslationStrDto], { description: "Manga titles" })
-        names: TranslationStrDto[]
+    @Field(() => [LocalizedStrDto], {description: "Manga titles"})
+        names: LocalizedStrDto[]
 }

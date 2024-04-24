@@ -2,21 +2,27 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type TranslationStrEntity {
+type LocalizedStrEntity {
   lang: String!
   text: String!
 }
 
 type GenreEntity {
   _id: String!
-  names: [TranslationStrEntity!]!
+  names: [LocalizedStrEntity!]!
+}
+
+type LocalizedImageEntity {
+  lang: String!
+  imagePath: String!
 }
 
 type MangaEntity {
   _id: String!
   year: Int!
-  titles: [TranslationStrEntity!]!
-  descriptions: [TranslationStrEntity!]!
+  titles: [LocalizedStrEntity!]!
+  descriptions: [LocalizedStrEntity!]!
+  covers: [LocalizedImageEntity!]!
   genres: [GenreEntity!]!
   ageRating: MangaAgeRatingEnum!
   status: MangaStatusEnum!
@@ -37,13 +43,19 @@ enum MangaStatusEnum {
 
 type Query {
   getHello: String!
-  getAllManga: [MangaEntity!]!
+  mangas(fieldsFilterLangCodes: [String!], genreIds: [String!], page: Float, limit: Float): [MangaEntity!]!
+  manga(id: String!, fieldsFilterLangCodes: [String!]): MangaEntity!
   genres: [GenreEntity!]!
+  genre(id: String!): GenreEntity!
 }
 
 type Mutation {
   createManga(createMangaInput: CreateMangaInput!): MangaEntity!
+  updateManga(updateMangaInput: UpdateMangaInput!): MangaEntity!
+  removeManga(id: String!): MangaEntity!
   createGenre(createGenreInput: CreateGenreInput!): GenreEntity!
+  updateGenre(updateGenreInput: UpdateGenreInput!): GenreEntity!
+  removeGenre(id: String!): GenreEntity!
 }
 
 input CreateMangaInput {
@@ -51,10 +63,13 @@ input CreateMangaInput {
   year: Int!
 
   """Manga titles"""
-  titles: [TranslationStrDto!]!
+  titles: [LocalizedStrDto!]!
 
   """Manga descriptions"""
-  descriptions: [TranslationStrDto!]!
+  descriptions: [LocalizedStrDto!]!
+
+  """Manga descriptions"""
+  covers: [LocalizedImageDto!]!
 
   """Manga genres _id list"""
   genres: [String!]!
@@ -66,15 +81,53 @@ input CreateMangaInput {
   status: MangaStatusEnum!
 }
 
-input TranslationStrDto {
-  """Manga year"""
+input LocalizedStrDto {
+  """Lang code"""
   lang: String!
 
-  """Manga year"""
+  """Some text"""
   text: String!
+}
+
+input LocalizedImageDto {
+  """Lang code"""
+  lang: String!
+
+  """Path to image"""
+  imagePath: String!
+}
+
+input UpdateMangaInput {
+  """Manga year"""
+  year: Int
+
+  """Manga titles"""
+  titles: [LocalizedStrDto!]
+
+  """Manga descriptions"""
+  descriptions: [LocalizedStrDto!]
+
+  """Manga descriptions"""
+  covers: [LocalizedImageDto!]
+
+  """Manga genres _id list"""
+  genres: [String!]
+
+  """Manga age rating"""
+  ageRating: MangaAgeRatingEnum
+
+  """Manga status"""
+  status: MangaStatusEnum
+  _id: String!
 }
 
 input CreateGenreInput {
   """Manga titles"""
-  names: [TranslationStrDto!]!
+  names: [LocalizedStrDto!]!
+}
+
+input UpdateGenreInput {
+  """Manga titles"""
+  names: [LocalizedStrDto!]
+  _id: String!
 }

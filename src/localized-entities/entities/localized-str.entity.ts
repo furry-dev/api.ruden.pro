@@ -1,7 +1,7 @@
 import { Field, ObjectType } from "@nestjs/graphql"
 
 @ObjectType()
-export class TranslationStrEntity {
+export class LocalizedStrEntity {
     @Field(() => String)
         lang: string
 

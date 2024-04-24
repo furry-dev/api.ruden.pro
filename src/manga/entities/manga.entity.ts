@@ -1,8 +1,9 @@
-import { Field, Int, ObjectType, registerEnumType } from "@nestjs/graphql"
-import { Document, Schema as MongoSchema } from "mongoose"
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose"
-import { TranslationStrEntity } from "../../translation-str/entities/translation-str.entity"
-import { GenreEntity } from "../../genres/entities/genre.entity"
+import {Field, Int, ObjectType, registerEnumType} from "@nestjs/graphql"
+import {Document, Schema as MongoSchema} from "mongoose"
+import {Prop, Schema, SchemaFactory} from "@nestjs/mongoose"
+import {LocalizedStrEntity} from "../../localized-entities/entities/localized-str.entity"
+import {GenreEntity} from "../../genres/entities/genre.entity"
+import {LocalizedImageEntity} from "../../localized-entities/entities/localized-image.entity"
 
 
 export enum MangaStatusEnum {
@@ -18,12 +19,12 @@ export enum MangaAgeRatingEnum {
     R_12 = "12+"
 }
 
-registerEnumType(MangaStatusEnum, { name: "MangaStatusEnum" })
-registerEnumType(MangaAgeRatingEnum, { name: "MangaAgeRatingEnum" })
+registerEnumType(MangaStatusEnum, {name: "MangaStatusEnum"})
+registerEnumType(MangaAgeRatingEnum, {name: "MangaAgeRatingEnum"})
 
 
 @ObjectType()
-@Schema({ collection: "mangas", timestamps: true })
+@Schema({collection: "mangas", timestamps: true})
 export class MangaEntity {
     @Field(() => String)
         _id: MongoSchema.Types.ObjectId
@@ -32,24 +33,28 @@ export class MangaEntity {
     @Prop()
         year: number
 
-    @Field(() => [TranslationStrEntity])
+    @Field(() => [LocalizedStrEntity])
     @Prop()
-        titles: TranslationStrEntity[]
+        titles: LocalizedStrEntity[]
 
-    @Field(() => [TranslationStrEntity])
+    @Field(() => [LocalizedStrEntity])
     @Prop()
-        descriptions: TranslationStrEntity[]
+        descriptions: LocalizedStrEntity[]
+
+    @Field(() => [LocalizedImageEntity])
+    @Prop()
+        covers: LocalizedImageEntity[]
 
     @Field(() => [GenreEntity])
-    @Prop({ type: [{ type: MongoSchema.Types.ObjectId, ref: "GenreEntity" }], default: [] })
+    @Prop({type: [{type: MongoSchema.Types.ObjectId, ref: "GenreEntity"}], default: []})
         genres: GenreEntity[]
 
     @Field(() => MangaAgeRatingEnum)
-    @Prop({ type: String, enum: MangaAgeRatingEnum, default: MangaAgeRatingEnum.R_H })
+    @Prop({type: String, enum: MangaAgeRatingEnum, default: MangaAgeRatingEnum.R_H})
         ageRating: string
 
     @Field(() => MangaStatusEnum)
-    @Prop({ type: String, enum: MangaStatusEnum, default: MangaStatusEnum.released })
+    @Prop({type: String, enum: MangaStatusEnum, default: MangaStatusEnum.released})
         status: string
 }
 
