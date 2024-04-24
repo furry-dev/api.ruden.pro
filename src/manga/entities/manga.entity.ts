@@ -1,9 +1,10 @@
 import {Field, Int, ObjectType, registerEnumType} from "@nestjs/graphql"
 import {Document, Schema as MongoSchema} from "mongoose"
 import {Prop, Schema, SchemaFactory} from "@nestjs/mongoose"
-import {LocalizedStrEntity} from "../../localized-entities/entities/localized-str.entity"
+import {LocalizedStrEntity} from "../../oher-entities/localized-entities/entities/localized-str.entity"
 import {GenreEntity} from "../../genres/entities/genre.entity"
-import {LocalizedImageEntity} from "../../localized-entities/entities/localized-image.entity"
+import {LocalizedImageEntity} from "../../oher-entities/localized-entities/entities/localized-image.entity"
+import {PersonEntity} from "../../people/entities/person.entity"
 
 
 export enum MangaStatusEnum {
@@ -48,6 +49,14 @@ export class MangaEntity {
     @Field(() => [GenreEntity])
     @Prop({type: [{type: MongoSchema.Types.ObjectId, ref: "GenreEntity"}], default: []})
         genres: GenreEntity[]
+
+    @Field(() => [PersonEntity])
+    @Prop({type: [{type: MongoSchema.Types.ObjectId, ref: "PersonEntity"}], default: []})
+        authors: PersonEntity[]
+
+    @Field(() => [PersonEntity])
+    @Prop({type: [{type: MongoSchema.Types.ObjectId, ref: "PersonEntity"}], default: []})
+        artists: PersonEntity[]
 
     @Field(() => MangaAgeRatingEnum)
     @Prop({type: String, enum: MangaAgeRatingEnum, default: MangaAgeRatingEnum.R_H})

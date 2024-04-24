@@ -1,7 +1,7 @@
 import {Field, InputType, Int} from "@nestjs/graphql"
-import {LocalizedStrDto} from "../../localized-entities/dto/localized-str.dto"
+import {LocalizedStrDto} from "../../oher-entities/localized-entities/dto/localized-str.dto"
 import {MangaAgeRatingEnum, MangaStatusEnum} from "../entities/manga.entity"
-import {LocalizedImageDto} from "../../localized-entities/dto/localized-image.dto"
+import {LocalizedImageDto} from "../../oher-entities/localized-entities/dto/localized-image.dto"
 
 @InputType()
 export class CreateMangaInput {
@@ -19,6 +19,12 @@ export class CreateMangaInput {
 
     @Field(() => [String], {description: "Manga genres _id list"})
         genres: string[]
+
+    @Field(() => [String], {description: "Manga people _id list"})
+        authors: string[]
+
+    @Field(() => [String], {description: "Manga people _id list"})
+        artists: string[]
 
     @Field(() => MangaAgeRatingEnum, {description: "Manga age rating"})
         ageRating: string

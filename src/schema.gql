@@ -17,6 +17,20 @@ type LocalizedImageEntity {
   imagePath: String!
 }
 
+type LabeledStrEntity {
+  label: String!
+  text: String!
+}
+
+type PersonEntity {
+  _id: String!
+  birthYear: Int
+  name: [LocalizedStrEntity!]!
+  bio: [LocalizedStrEntity!]!
+  avatar: String
+  socialLinks: [LabeledStrEntity!]!
+}
+
 type MangaEntity {
   _id: String!
   year: Int!
@@ -24,6 +38,8 @@ type MangaEntity {
   descriptions: [LocalizedStrEntity!]!
   covers: [LocalizedImageEntity!]!
   genres: [GenreEntity!]!
+  authors: [PersonEntity!]!
+  artists: [PersonEntity!]!
   ageRating: MangaAgeRatingEnum!
   status: MangaStatusEnum!
 }
@@ -43,6 +59,8 @@ enum MangaStatusEnum {
 
 type Query {
   getHello: String!
+  people: [PersonEntity!]!
+  person(id: String!): PersonEntity!
   mangas(fieldsFilterLangCodes: [String!], genreIds: [String!], page: Float, limit: Float): [MangaEntity!]!
   manga(id: String!, fieldsFilterLangCodes: [String!]): MangaEntity!
   genres: [GenreEntity!]!
@@ -50,12 +68,62 @@ type Query {
 }
 
 type Mutation {
+  createPerson(createPersonInput: CreatePersonInput!): PersonEntity!
+  updatePerson(updatePersonInput: UpdatePersonInput!): PersonEntity!
+  removePerson(id: String!): PersonEntity!
   createManga(createMangaInput: CreateMangaInput!): MangaEntity!
   updateManga(updateMangaInput: UpdateMangaInput!): MangaEntity!
   removeManga(id: String!): MangaEntity!
   createGenre(createGenreInput: CreateGenreInput!): GenreEntity!
   updateGenre(updateGenreInput: UpdateGenreInput!): GenreEntity!
   removeGenre(id: String!): GenreEntity!
+}
+
+input CreatePersonInput {
+  """Manga year"""
+  birthYear: Int
+
+  """Manga titles"""
+  name: [LocalizedStrDto!]!
+
+  """Manga descriptions"""
+  bio: [LocalizedStrDto!]!
+  avatar: String
+
+  """Manga descriptions"""
+  socialLinks: [LabeledStrDto!]!
+}
+
+input LocalizedStrDto {
+  """Lang code"""
+  lang: String!
+
+  """Some text"""
+  text: String!
+}
+
+input LabeledStrDto {
+  """Lang code"""
+  label: String!
+
+  """Some text"""
+  text: String!
+}
+
+input UpdatePersonInput {
+  """Manga year"""
+  birthYear: Int
+
+  """Manga titles"""
+  name: [LocalizedStrDto!]
+
+  """Manga descriptions"""
+  bio: [LocalizedStrDto!]
+  avatar: String
+
+  """Manga descriptions"""
+  socialLinks: [LabeledStrDto!]
+  _id: String!
 }
 
 input CreateMangaInput {
@@ -74,19 +142,17 @@ input CreateMangaInput {
   """Manga genres _id list"""
   genres: [String!]!
 
+  """Manga people _id list"""
+  authors: [String!]!
+
+  """Manga people _id list"""
+  artists: [String!]!
+
   """Manga age rating"""
   ageRating: MangaAgeRatingEnum!
 
   """Manga status"""
   status: MangaStatusEnum!
-}
-
-input LocalizedStrDto {
-  """Lang code"""
-  lang: String!
-
-  """Some text"""
-  text: String!
 }
 
 input LocalizedImageDto {
@@ -112,6 +178,12 @@ input UpdateMangaInput {
 
   """Manga genres _id list"""
   genres: [String!]
+
+  """Manga people _id list"""
+  authors: [String!]
+
+  """Manga people _id list"""
+  artists: [String!]
 
   """Manga age rating"""
   ageRating: MangaAgeRatingEnum

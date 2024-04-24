@@ -1,17 +1,19 @@
-import { Module } from "@nestjs/common"
-import { AppResolver } from "./app.resolver"
-import { AppService } from "./app.service"
+import {Module} from "@nestjs/common"
+import {AppResolver} from "./app.resolver"
+import {AppService} from "./app.service"
 
-import { GraphQLModule } from "@nestjs/graphql"
-import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo"
-import { join } from "path"
-import { MongooseModule, MongooseModuleOptions } from "@nestjs/mongoose"
-import { ConfigModule, ConfigService } from "@nestjs/config"
-import { MangaModule } from "../manga/manga.module"
-import { GenresModule } from "../genres/genres.module"
+import {GraphQLModule} from "@nestjs/graphql"
+import {ApolloDriver, ApolloDriverConfig} from "@nestjs/apollo"
+import {join} from "path"
+import {MongooseModule, MongooseModuleOptions} from "@nestjs/mongoose"
+import {ConfigModule, ConfigService} from "@nestjs/config"
+import {MangaModule} from "../manga/manga.module"
+import {GenresModule} from "../genres/genres.module"
+import {PeopleModule} from "../people/people.module"
 
 @Module({
     imports: [
+        PeopleModule,
         MangaModule,
         GenresModule,
         GraphQLModule.forRoot<ApolloDriverConfig>({

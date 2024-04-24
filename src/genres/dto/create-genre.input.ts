@@ -1,5 +1,5 @@
 import {Field, InputType} from "@nestjs/graphql"
-import {LocalizedStrDto} from "../../localized-entities/dto/localized-str.dto"
+import {LocalizedStrDto} from "../../oher-entities/localized-entities/dto/localized-str.dto"
 
 @InputType()
 export class CreateGenreInput {

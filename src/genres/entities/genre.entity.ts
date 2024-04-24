@@ -1,6 +1,6 @@
 import {Field, ObjectType} from "@nestjs/graphql"
 import {Prop, Schema, SchemaFactory} from "@nestjs/mongoose"
-import {LocalizedStrEntity} from "../../localized-entities/entities/localized-str.entity"
+import {LocalizedStrEntity} from "../../oher-entities/localized-entities/entities/localized-str.entity"
 import {Document, Schema as MongoSchema} from "mongoose"
 
 @Schema({collection: "genres", timestamps: true})
