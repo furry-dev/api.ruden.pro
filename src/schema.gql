@@ -25,6 +25,7 @@ type LabeledStrEntity {
 type PersonEntity {
   _id: String!
   birthYear: Int
+  place: String
   name: [LocalizedStrEntity!]!
   bio: [LocalizedStrEntity!]!
   avatar: String
@@ -42,6 +43,7 @@ type MangaEntity {
   artists: [PersonEntity!]!
   ageRating: MangaAgeRatingEnum!
   status: MangaStatusEnum!
+  slug: String!
 }
 
 enum MangaAgeRatingEnum {
@@ -80,8 +82,11 @@ type Mutation {
 }
 
 input CreatePersonInput {
-  """Manga year"""
+  """Year of birth"""
   birthYear: Int
+
+  """Place where person leave"""
+  place: String
 
   """Manga titles"""
   name: [LocalizedStrDto!]!
@@ -111,8 +116,11 @@ input LabeledStrDto {
 }
 
 input UpdatePersonInput {
-  """Manga year"""
+  """Year of birth"""
   birthYear: Int
+
+  """Place where person leave"""
+  place: String
 
   """Manga titles"""
   name: [LocalizedStrDto!]
@@ -153,6 +161,7 @@ input CreateMangaInput {
 
   """Manga status"""
   status: MangaStatusEnum!
+  slug: String!
 }
 
 input LocalizedImageDto {
@@ -190,6 +199,7 @@ input UpdateMangaInput {
 
   """Manga status"""
   status: MangaStatusEnum
+  slug: String
   _id: String!
 }
 

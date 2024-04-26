@@ -15,6 +15,10 @@ export class PersonEntity {
     @Prop()
         birthYear?: number
 
+    @Field(() => String, {nullable: true})
+    @Prop()
+        place?: string
+
     @Field(() => [LocalizedStrEntity])
     @Prop()
         name: LocalizedStrEntity[]

@@ -4,8 +4,11 @@ import {LabeledStrDto} from "../../oher-entities/labeled-entities/dto/labeled-st
 
 @InputType()
 export class CreatePersonInput {
-    @Field(() => Int, {nullable: true, description: "Manga year"})
+    @Field(() => Int, {nullable: true, description: "Year of birth"})
         birthYear?: number
+
+    @Field(() => String, {nullable: true, description: "Place where person leave"})
+        place?: string
 
     @Field(() => [LocalizedStrDto], {description: "Manga titles"})
         name: LocalizedStrDto[]

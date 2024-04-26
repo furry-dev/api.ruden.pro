@@ -65,6 +65,10 @@ export class MangaEntity {
     @Field(() => MangaStatusEnum)
     @Prop({type: String, enum: MangaStatusEnum, default: MangaStatusEnum.released})
         status: string
+
+    @Field(() => String)
+    @Prop()
+        slug: string
 }
 
 export type MangaDocument = MangaEntity & Document

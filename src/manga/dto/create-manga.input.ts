@@ -2,6 +2,8 @@ import {Field, InputType, Int} from "@nestjs/graphql"
 import {LocalizedStrDto} from "../../oher-entities/localized-entities/dto/localized-str.dto"
 import {MangaAgeRatingEnum, MangaStatusEnum} from "../entities/manga.entity"
 import {LocalizedImageDto} from "../../oher-entities/localized-entities/dto/localized-image.dto"
+import {Matches} from "class-validator"
+import {SLUG_REGEX} from "../../constants/regex.constants"
 
 @InputType()
 export class CreateMangaInput {
@@ -31,4 +33,10 @@ export class CreateMangaInput {
 
     @Field(() => MangaStatusEnum, {description: "Manga status"})
         status: string
+
+    @Matches(SLUG_REGEX, {
+        message: "Slug must contain only lowercase alphanumeric characters and hyphens, and cannot start or end with a hyphen",
+    })
+    @Field(() => String)
+        slug: string
 }
