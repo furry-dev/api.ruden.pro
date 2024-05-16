@@ -26,10 +26,10 @@ type PersonEntity {
   _id: String!
   birthYear: Int
   place: String
-  name: [LocalizedStrEntity!]!
-  bio: [LocalizedStrEntity!]!
+  names: [LocalizedStrEntity]!
+  bio: [LocalizedStrEntity]!
   avatar: String
-  socialLinks: [LabeledStrEntity!]!
+  socialLinks: [LabeledStrEntity]!
 }
 
 type MangaEntity {
@@ -38,12 +38,16 @@ type MangaEntity {
   titles: [LocalizedStrEntity!]!
   descriptions: [LocalizedStrEntity!]!
   covers: [LocalizedImageEntity!]!
-  genres: [GenreEntity!]!
-  authors: [PersonEntity!]!
-  artists: [PersonEntity!]!
+  banners: [LocalizedImageEntity!]!
+  genres: [GenreEntity]!
+  authors: [PersonEntity]!
+  artists: [PersonEntity]!
   ageRating: MangaAgeRatingEnum!
   status: MangaStatusEnum!
   slug: String!
+  readingMode: MangaRecommendedReadingType!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 enum MangaAgeRatingEnum {
@@ -59,12 +63,22 @@ enum MangaStatusEnum {
   finished
 }
 
+enum MangaRecommendedReadingType {
+  Vertical
+  Horizontal
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Query {
   getHello: String!
   people: [PersonEntity!]!
   person(id: String!): PersonEntity!
   mangas(fieldsFilterLangCodes: [String!], genreIds: [String!], page: Float, limit: Float): [MangaEntity!]!
-  manga(id: String!, fieldsFilterLangCodes: [String!]): MangaEntity!
+  manga(idOrSlug: String!, fieldsFilterLangCodes: [String!]): MangaEntity!
   genres: [GenreEntity!]!
   genre(id: String!): GenreEntity!
 }
@@ -144,8 +158,11 @@ input CreateMangaInput {
   """Manga descriptions"""
   descriptions: [LocalizedStrDto!]!
 
-  """Manga descriptions"""
+  """Manga covers"""
   covers: [LocalizedImageDto!]!
+
+  """Manga banners"""
+  banners: [LocalizedImageDto!]!
 
   """Manga genres _id list"""
   genres: [String!]!
@@ -162,6 +179,9 @@ input CreateMangaInput {
   """Manga status"""
   status: MangaStatusEnum!
   slug: String!
+
+  """Manga recommended reading type"""
+  readingMode: MangaRecommendedReadingType!
 }
 
 input LocalizedImageDto {
@@ -182,8 +202,11 @@ input UpdateMangaInput {
   """Manga descriptions"""
   descriptions: [LocalizedStrDto!]
 
-  """Manga descriptions"""
+  """Manga covers"""
   covers: [LocalizedImageDto!]
+
+  """Manga banners"""
+  banners: [LocalizedImageDto!]
 
   """Manga genres _id list"""
   genres: [String!]
@@ -200,6 +223,9 @@ input UpdateMangaInput {
   """Manga status"""
   status: MangaStatusEnum
   slug: String
+
+  """Manga recommended reading type"""
+  readingMode: MangaRecommendedReadingType
   _id: String!
 }
 

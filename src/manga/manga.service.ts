@@ -59,8 +59,10 @@ export class MangaService {
     }
 
 
-    async findOne(_id: string, fieldsFilterLangCodes?: (string | null)[]) {
-        const manga = await this.mangaModel.findById(_id)
+    async findOne(idOrSlug?: string, fieldsFilterLangCodes?: (string | null)[]) {
+        const searchQuery = Types.ObjectId.isValid(idOrSlug) ? {_id: idOrSlug} : {slug: idOrSlug}
+
+        const manga = await this.mangaModel.findOne(searchQuery)
             .populate("genres")
             .populate("authors")
             .populate("artists")

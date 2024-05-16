@@ -32,11 +32,11 @@ export class MangaResolver {
 
     @Query(() => MangaEntity, {name: "manga"})
     findOne(
-        @Args("id", {type: () => String}) _id: string,
+        @Args("idOrSlug", {type: () => String}) idOrSlug: string,
         @Args("fieldsFilterLangCodes", {type: () => [String], nullable: true})
             fieldsFilterLangCodes?: string[]
     ) {
-        return this.mangaService.findOne(_id, fieldsFilterLangCodes)
+        return this.mangaService.findOne(idOrSlug, fieldsFilterLangCodes)
     }
 
     @Mutation(() => MangaEntity)

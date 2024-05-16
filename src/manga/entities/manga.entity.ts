@@ -20,8 +20,14 @@ export enum MangaAgeRatingEnum {
     R_12 = "12+"
 }
 
+export enum MangaRecommendedReadingType {
+    Vertical = "Vertical",
+    Horizontal = "Horizontal"
+}
+
 registerEnumType(MangaStatusEnum, {name: "MangaStatusEnum"})
 registerEnumType(MangaAgeRatingEnum, {name: "MangaAgeRatingEnum"})
+registerEnumType(MangaRecommendedReadingType, {name: "MangaRecommendedReadingType"})
 
 
 @ObjectType()
@@ -46,15 +52,19 @@ export class MangaEntity {
     @Prop()
         covers: LocalizedImageEntity[]
 
-    @Field(() => [GenreEntity])
+    @Field(() => [LocalizedImageEntity])
+    @Prop()
+        banners: LocalizedImageEntity[]
+
+    @Field(() => [GenreEntity], {nullable: "items"})
     @Prop({type: [{type: MongoSchema.Types.ObjectId, ref: "GenreEntity"}], default: []})
         genres: GenreEntity[]
 
-    @Field(() => [PersonEntity])
+    @Field(() => [PersonEntity], {nullable: "items"})
     @Prop({type: [{type: MongoSchema.Types.ObjectId, ref: "PersonEntity"}], default: []})
         authors: PersonEntity[]
 
-    @Field(() => [PersonEntity])
+    @Field(() => [PersonEntity], {nullable: "items"})
     @Prop({type: [{type: MongoSchema.Types.ObjectId, ref: "PersonEntity"}], default: []})
         artists: PersonEntity[]
 
@@ -69,6 +79,18 @@ export class MangaEntity {
     @Field(() => String)
     @Prop()
         slug: string
+
+    @Field(() => MangaRecommendedReadingType)
+    @Prop({type: String, enum: MangaRecommendedReadingType, default: MangaRecommendedReadingType.Horizontal})
+        readingMode: string
+
+    @Field(() => Date)
+    @Prop()
+        createdAt: Date
+
+    @Field(() => Date)
+    @Prop()
+        updatedAt: Date
 }
 
 export type MangaDocument = MangaEntity & Document

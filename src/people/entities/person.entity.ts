@@ -19,11 +19,11 @@ export class PersonEntity {
     @Prop()
         place?: string
 
-    @Field(() => [LocalizedStrEntity])
+    @Field(() => [LocalizedStrEntity], {nullable: "items"})
     @Prop()
-        name: LocalizedStrEntity[]
+        names: LocalizedStrEntity[]
 
-    @Field(() => [LocalizedStrEntity])
+    @Field(() => [LocalizedStrEntity], {nullable: "items"})
     @Prop()
         bio: LocalizedStrEntity[]
 
@@ -31,7 +31,7 @@ export class PersonEntity {
     @Prop()
         avatar?: string
 
-    @Field(() => [LabeledStrEntity])
+    @Field(() => [LabeledStrEntity], {nullable: "items"})
     @Prop()
         socialLinks: LabeledStrEntity[]
 }

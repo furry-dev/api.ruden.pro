@@ -1,6 +1,6 @@
 import {Field, InputType, Int} from "@nestjs/graphql"
 import {LocalizedStrDto} from "../../oher-entities/localized-entities/dto/localized-str.dto"
-import {MangaAgeRatingEnum, MangaStatusEnum} from "../entities/manga.entity"
+import {MangaAgeRatingEnum, MangaRecommendedReadingType, MangaStatusEnum} from "../entities/manga.entity"
 import {LocalizedImageDto} from "../../oher-entities/localized-entities/dto/localized-image.dto"
 import {Matches} from "class-validator"
 import {SLUG_REGEX} from "../../constants/regex.constants"
@@ -16,8 +16,11 @@ export class CreateMangaInput {
     @Field(() => [LocalizedStrDto], {description: "Manga descriptions"})
         descriptions: LocalizedStrDto[]
 
-    @Field(() => [LocalizedImageDto], {description: "Manga descriptions"})
+    @Field(() => [LocalizedImageDto], {description: "Manga covers"})
         covers: LocalizedImageDto[]
+
+    @Field(() => [LocalizedImageDto], {description: "Manga banners"})
+        banners: LocalizedImageDto[]
 
     @Field(() => [String], {description: "Manga genres _id list"})
         genres: string[]
@@ -39,4 +42,7 @@ export class CreateMangaInput {
     })
     @Field(() => String)
         slug: string
+
+    @Field(() => MangaRecommendedReadingType, {description: "Manga recommended reading type"})
+        readingMode: string
 }

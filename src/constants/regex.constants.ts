@@ -1,1 +1,1 @@
-export const SLUG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
+export const SLUG_REGEX = /^[A-Za-z0-9-]+$/
